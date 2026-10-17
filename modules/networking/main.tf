@@ -55,4 +55,5 @@ resource "azurerm_virtual_network_peering" "spoke-to-hub" {
   virtual_network_name         = azurerm_virtual_network.spoke-vnet.name
   remote_virtual_network_id    = azurerm_virtual_network.hub-vnet.id
   allow_virtual_network_access = true
+  depends_on                   = [azurerm_virtual_network_peering.hub-to-spoke]
 }
