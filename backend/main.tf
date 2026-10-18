@@ -15,24 +15,24 @@ resource "azurerm_storage_account" "state_storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-    lifecycle {
-        prevent_destroy = false
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  min_tls_version            = "TLS1_2"
+  https_traffic_only_enabled = true
+
+  blob_properties {
+    versioning_enabled = true
+
+    delete_retention_policy {
+      days = 30
     }
-
-    min_tls_version            = "TLS1_2"
-    https_traffic_only_enabled = true
-
-    blob_properties {
-      versioning_enabled = true
-
-      delete_retention_policy {
-        days = 30
-      }
-    }
+  }
 }
 
 resource "azurerm_storage_container" "state_container" {
-    name                  = "tfstate"
-    storage_account_id    = azurerm_storage_account.state_storage.id
-    container_access_type = "private"
-    }
+  name                  = "tfstate"
+  storage_account_id    = azurerm_storage_account.state_storage.id
+  container_access_type = "private"
+}
