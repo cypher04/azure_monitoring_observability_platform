@@ -57,3 +57,82 @@ resource "azurerm_virtual_network_peering" "spoke-to-hub" {
   allow_virtual_network_access = true
   depends_on                   = [azurerm_virtual_network_peering.hub-to-spoke]
 }
+
+########################################################
+## Network Security Groups
+########################################################
+resource "azurerm_network_security_group" "hub-nsg" {
+  name                = "hub-nsg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.networking.name
+
+
+  security_rule {
+    name                       = "allow traffic from spoke"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = var.subnet_prefixes["spoke-subnet"]
+    destination_address_prefix = var.subnet_prefixes["hub-subnet"]
+  }
+
+  security_rule {
+    name                       = "allow traffic to spoke"
+    priority                   = 1002
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = var.subnet_prefixes["hub-subnet"]
+    destination_address_prefix = var.subnet_prefixes["spoke-subnet"]
+  }
+
+
+}
+
+
+resource "azurerm_network_security_group" "spoke-nsg" {
+  name                = "spoke-nsg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.networking.name
+
+  security_rule {
+    name                       = "allow traffic from hub"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = var.subnet_prefixes["hub-subnet"]
+    destination_address_prefix = var.subnet_prefixes["spoke-subnet"]
+  }
+  security_rule {
+    name                       = "allow traffic to hub"
+    priority                   = 1002
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = var.subnet_prefixes["spoke-subnet"]
+    destination_address_prefix = var.subnet_prefixes["hub-subnet"]
+  }
+}
+
+#######################################################
+## Security groups association for hub and spoke subnets
+#######################################################
+resource "azurerm_subnet_network_security_group_association" "hub-subnet-nsg-association" {
+  subnet_id                 = azurerm_subnet.hub-subnet.id
+  network_security_group_id = azurerm_network_security_group.hub-nsg.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "spoke-subnet-nsg-association" {
+  subnet_id                 = azurerm_subnet.spoke-subnet.id
+  network_security_group_id = azurerm_network_security_group.spoke-nsg.id
+}
