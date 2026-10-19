@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
 
   security_rule {
-    name                       = "allow traffic from spoke"
+    name                       = "allow-traffic-from-spoke"
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
@@ -80,7 +80,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
   }
 
   security_rule {
-    name                       = "allow traffic to spoke"
+    name                       = "allow-traffic-to-spoke"
     priority                   = 1002
     direction                  = "Outbound"
     access                     = "Allow"
@@ -101,7 +101,7 @@ resource "azurerm_network_security_group" "spoke-nsg" {
   resource_group_name = azurerm_resource_group.networking.name
 
   security_rule {
-    name                       = "allow traffic from hub"
+    name                       = "allow-traffic-from-hub"
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
@@ -112,7 +112,7 @@ resource "azurerm_network_security_group" "spoke-nsg" {
     destination_address_prefix = var.subnet_prefixes["spoke-subnet"]
   }
   security_rule {
-    name                       = "allow traffic to hub"
+    name                       = "allow-traffic-to-hub"
     priority                   = 1002
     direction                  = "Outbound"
     access                     = "Allow"
