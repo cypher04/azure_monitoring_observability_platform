@@ -72,7 +72,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
     source_address_prefix      = var.subnet_prefixes["spoke-subnet"]
@@ -84,11 +84,35 @@ resource "azurerm_network_security_group" "hub-nsg" {
     priority                   = 1002
     direction                  = "Outbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
     source_address_prefix      = var.subnet_prefixes["hub-subnet"]
     destination_address_prefix = var.subnet_prefixes["spoke-subnet"]
+  }
+
+  security_rule {
+    name                       = "deny-internal-traffic"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  security_rule {
+    name                       = "deny-internal-traffic-outbound"
+    priority                   = 1004
+    direction                  = "Outbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
   }
 
 
@@ -102,10 +126,10 @@ resource "azurerm_network_security_group" "spoke-nsg" {
 
   security_rule {
     name                       = "allow-traffic-from-hub"
-    priority                   = 1001
+    priority                   = 2001
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
     source_address_prefix      = var.subnet_prefixes["hub-subnet"]
@@ -113,14 +137,38 @@ resource "azurerm_network_security_group" "spoke-nsg" {
   }
   security_rule {
     name                       = "allow-traffic-to-hub"
-    priority                   = 1002
+    priority                   = 2002
     direction                  = "Outbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
     source_address_prefix      = var.subnet_prefixes["spoke-subnet"]
     destination_address_prefix = var.subnet_prefixes["hub-subnet"]
+  }
+
+  security_rule {
+    name                       = "deny-internal-traffic"
+    priority                   = 2003
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  security_rule {
+    name                       = "deny-internal-traffic-outbound"
+    priority                   = 2004
+    direction                  = "Outbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
   }
 }
 
@@ -135,4 +183,34 @@ resource "azurerm_subnet_network_security_group_association" "hub-subnet-nsg-ass
 resource "azurerm_subnet_network_security_group_association" "spoke-subnet-nsg-association" {
   subnet_id                 = azurerm_subnet.spoke-subnet.id
   network_security_group_id = azurerm_network_security_group.spoke-nsg.id
+}
+
+
+#######################################################
+## nat gateway
+#######################################################
+resource "azurerm_nat_gateway" "hub-nat-gateway" {
+  name                    = "hub-nat-gateway"
+  location                = var.location
+  resource_group_name     = azurerm_resource_group.networking.name
+  sku_name                = "Standard"
+  idle_timeout_in_minutes = 10
+  zones                   = ["1"]
+}
+
+resource "azurerm_public_ip" "hub-nat-gateway-pip" {
+  name                = "hub-nat-gateway-pip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.networking.name
+  allocation_method   = "Static"
+}
+
+resource "azurerm_nat_gateway_public_ip_association" "hub-nat-gateway-pip-association" {
+  nat_gateway_id       = azurerm_nat_gateway.hub-nat-gateway.id
+  public_ip_address_id = azurerm_public_ip.hub-nat-gateway-pip.id
+}
+
+resource "azurerm_subnet_nat_gateway_association" "hub-subnet-nat-assoc" {
+  subnet_id      = azurerm_subnet.hub-subnet.id
+  nat_gateway_id = azurerm_nat_gateway.hub-nat-gateway.id
 }
