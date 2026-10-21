@@ -10,3 +10,10 @@ module "network" {
   address_space   = var.address_space
   subnet_prefixes = var.subnet_prefixes
 }
+
+
+module "database" {
+  source = "../../modules/database"
+
+  location = var.location
+}
