@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "log-storage" {
 }
 
 resource "azurerm_storage_container" "log-container" {
-  name                  = "log-container${random_string.storage_suffix.result}"
+  name                  = "log-container"
   storage_account_id    = azurerm_storage_account.log-storage.id
   container_access_type = "private"
 }
