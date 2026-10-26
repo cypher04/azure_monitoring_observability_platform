@@ -47,4 +47,5 @@ resource "azurerm_storage_management_policy" "log-storage-policy" {
 resource "random_string" "storage_suffix" {
   length  = 4
   special = false
+  upper   = false
 }
