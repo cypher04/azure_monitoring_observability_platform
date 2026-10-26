@@ -214,3 +214,74 @@ resource "azurerm_subnet_nat_gateway_association" "hub-subnet-nat-assoc" {
   subnet_id      = azurerm_subnet.hub-subnet.id
   nat_gateway_id = azurerm_nat_gateway.hub-nat-gateway.id
 }
+
+#######################################################
+## private dns zone for log analytics
+#######################################################
+
+resource "azurerm_private_dns_zone" "log-analytics-private-dns-zone" {
+  name                = "privatelink.ods.opinsights.azure.com"
+  resource_group_name = azurerm_resource_group.networking.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "hub-private-dns-zone-vnet-link" {
+  name                  = "hub-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.log-analytics-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke-private-dns-zone-vnet-link" {
+  name                  = "spoke-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.log-analytics-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+}
+
+#######################################################
+## private dns zone for key vault
+#######################################################
+
+resource "azurerm_private_dns_zone" "key-vault-private-dns-zone" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = azurerm_resource_group.networking.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "hub-key-vault-private-dns-zone-vnet-link" {
+  name                  = "hub-key-vault-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.key-vault-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke-key-vault-private-dns-zone-vnet-link" {
+  name                  = "spoke-key-vault-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.key-vault-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+}
+
+#######################################################
+## private dns zone for storage account
+#######################################################
+resource "azurerm_private_dns_zone" "storage-account-private-dns-zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = azurerm_resource_group.networking.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "hub-storage-account-private-dns-zone-vnet-link" {
+  name                  = "hub-storage-account-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.storage-account-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke-storage-account-private-dns-zone-vnet-link" {
+  name                  = "spoke-storage-account-private-dns-zone-vnet-link"
+  resource_group_name   = azurerm_resource_group.networking.name
+  private_dns_zone_name = azurerm_private_dns_zone.storage-account-private-dns-zone.name
+  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+}
+
+
+
