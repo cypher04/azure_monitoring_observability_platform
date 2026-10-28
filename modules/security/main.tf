@@ -32,6 +32,7 @@ resource "azurerm_key_vault_secret" "security-kv-secret" {
   name         = "security-kv-secret"
   value        = random_password.security-kv-password.result
   key_vault_id = azurerm_key_vault.security-kv.id
+  depends_on = [azurerm_role_assignment.security-kv-reader]
 }
 
 resource "azurerm_role_assignment" "security-kv-reader" {
