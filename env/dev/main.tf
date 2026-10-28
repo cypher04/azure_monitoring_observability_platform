@@ -17,3 +17,21 @@ module "database" {
 
   location = var.location
 }
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  location = var.location
+}
+
+module "security" {
+  source = "../../modules/security"
+
+  location = var.location
+}
+
+module "identity" {
+  source = "../../modules/identity"
+
+  location = var.location
+}
