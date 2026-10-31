@@ -225,17 +225,15 @@ resource "azurerm_private_dns_zone" "log-analytics-private-dns-zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "hub-private-dns-zone-vnet-link" {
-  name                  = "hub-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.log-analytics-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+  name                = "hub-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.log-analytics-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.hub-vnet.id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "spoke-private-dns-zone-vnet-link" {
-  name                  = "spoke-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.log-analytics-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+  name                = "spoke-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.log-analytics-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.spoke-vnet.id
 }
 
 #######################################################
@@ -248,17 +246,15 @@ resource "azurerm_private_dns_zone" "key-vault-private-dns-zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "hub-key-vault-private-dns-zone-vnet-link" {
-  name                  = "hub-key-vault-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.key-vault-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+  name                = "hub-key-vault-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.key-vault-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.hub-vnet.id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "spoke-key-vault-private-dns-zone-vnet-link" {
-  name                  = "spoke-key-vault-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.key-vault-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+  name                = "spoke-key-vault-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.key-vault-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.spoke-vnet.id
 }
 
 #######################################################
@@ -270,17 +266,15 @@ resource "azurerm_private_dns_zone" "storage-account-private-dns-zone" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "hub-storage-account-private-dns-zone-vnet-link" {
-  name                  = "hub-storage-account-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.storage-account-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.hub-vnet.id
+  name                = "hub-storage-account-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.storage-account-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.hub-vnet.id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "spoke-storage-account-private-dns-zone-vnet-link" {
-  name                  = "spoke-storage-account-private-dns-zone-vnet-link"
-  resource_group_name   = azurerm_resource_group.networking.name
-  private_dns_zone_name = azurerm_private_dns_zone.storage-account-private-dns-zone.name
-  virtual_network_id    = azurerm_virtual_network.spoke-vnet.id
+  name                = "spoke-storage-account-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.storage-account-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.spoke-vnet.id
 }
 
 
