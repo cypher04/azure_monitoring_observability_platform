@@ -1,4 +1,4 @@
-resource"azurerm_resource_group" "identity-rg" {
+resource "azurerm_resource_group" "identity-rg" {
   name     = "identity-rg"
   location = var.location
 }
