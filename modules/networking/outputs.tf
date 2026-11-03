@@ -9,6 +9,8 @@ output "spoke_vnet_id" {
 output "subnet_ids" {
   value = [
     azurerm_subnet.hub-subnet.id,
-    azurerm_subnet.spoke-subnet.id
+    azurerm_subnet.spoke-subnet.id,
+    azurerm_subnet.aks-subnet.id,
+    azurerm_subnet.app-gtw-subnet.id
   ]
 }
