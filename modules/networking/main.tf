@@ -38,6 +38,20 @@ resource "azurerm_subnet" "spoke-subnet" {
   address_prefixes     = [var.subnet_prefixes["spoke-subnet"]]
 }
 
+resource "azurerm_subnet" "aks-subnet" {
+  name                 = "aks-subnet"
+  resource_group_name  = azurerm_resource_group.networking.name
+  virtual_network_name = azurerm_virtual_network.spoke-vnet.name
+  address_prefixes     = [var.subnet_prefixes["aks-subnet"]]
+}
+
+resource "azurerm_subnet" "app-gtw-subnet" {
+  name                 = "app-gtw-subnet"
+  resource_group_name  = azurerm_resource_group.networking.name
+  virtual_network_name = azurerm_virtual_network.spoke-vnet.name
+  address_prefixes     = [var.subnet_prefixes["app-gtw-subnet"]]
+}
+
 ////////////////////////////////////////////////////////
 ## Virtual Network Peering
 ////////////////////////////////////////////////////////
