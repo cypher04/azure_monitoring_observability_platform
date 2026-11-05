@@ -101,11 +101,11 @@ resource "azurerm_network_security_group" "hub-nsg" {
   }
 
   security_rule {
-    name                       = "allow-ssh"
+    name                       = "allow-ssh-rdp"
     priority                   = 1002
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "TCP"
+    protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22,3389"
     source_address_prefix      = var.subnet_prefixes["AzureBastionSubnet"]
