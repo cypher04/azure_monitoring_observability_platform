@@ -52,6 +52,13 @@ resource "azurerm_subnet" "app-gtw-subnet" {
   address_prefixes     = [var.subnet_prefixes["app-gtw-subnet"]]
 }
 
+resource "azurerm_subnet" "bastion-subnet" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.networking.name
+  virtual_network_name = azurerm_virtual_network.hub-vnet.name
+  address_prefixes     = [var.subnet_prefixes["AzureBastionSubnet"]]
+}
+
 ////////////////////////////////////////////////////////
 ## Virtual Network Peering
 ////////////////////////////////////////////////////////
@@ -94,8 +101,20 @@ resource "azurerm_network_security_group" "hub-nsg" {
   }
 
   security_rule {
-    name                       = "allow-traffic-to-spoke"
+    name                       = "allow-ssh-rdp"
     priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22,3389"
+    source_address_prefix      = var.subnet_prefixes["AzureBastionSubnet"]
+    destination_address_prefix = var.subnet_prefixes["hub-subnet"]
+  }
+
+  security_rule {
+    name                       = "allow-traffic-to-spoke"
+    priority                   = 1003
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "*"
@@ -107,7 +126,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
   security_rule {
     name                       = "deny-internal-traffic"
-    priority                   = 1003
+    priority                   = 1004
     direction                  = "Inbound"
     access                     = "Deny"
     protocol                   = "*"
@@ -119,7 +138,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
   security_rule {
     name                       = "deny-internal-traffic-outbound"
-    priority                   = 1004
+    priority                   = 1005
     direction                  = "Outbound"
     access                     = "Deny"
     protocol                   = "*"
@@ -292,4 +311,26 @@ resource "azurerm_private_dns_zone_virtual_network_link" "spoke-storage-account-
 }
 
 
+#######################################################
+## Azure Bastion
+#######################################################
 
+resource "azurerm_bastion_host" "bastion" {
+  name                = "bastion"
+  location            = azurerm_resource_group.networking.location
+  resource_group_name = azurerm_resource_group.networking.name
+
+  ip_configuration {
+    name                 = "bastion-ip-configuration"
+    subnet_id            = azurerm_subnet.bastion-subnet.id
+    public_ip_address_id = azurerm_public_ip.bastion-public-ip.id
+  }
+}
+
+resource "azurerm_public_ip" "bastion-public-ip" {
+  name                = "bastion-public-ip"
+  location            = azurerm_resource_group.networking.location
+  resource_group_name = azurerm_resource_group.networking.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
