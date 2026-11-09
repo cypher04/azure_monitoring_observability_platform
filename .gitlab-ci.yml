@@ -22,14 +22,14 @@ default:
 # `extends` overwrites the key, it does not concatenate.
 .azure:
   id_tokens:
-    AZURE_ID_TOKEN:
+    AZUREAD_ID_TOKEN:
       aud: https://gitlab.com   # must equal the federated credential's audience
   before_script:
     - export ARM_USE_OIDC=true
-    - export ARM_OIDC_TOKEN="$AZURE_ID_TOKEN"
-    - export ARM_CLIENT_ID="$AZURE_CLIENT_ID"
+    - export ARM_OIDC_TOKEN="$AZUREAD_ID_TOKEN"
+    - export ARM_CLIENT_ID="$AZUREAD_CLIENT_ID"
     - export ARM_TENANT_ID="$AZUREAD_TENANT_ID"
-    - export ARM_SUBSCRIPTION_ID="$AZURE_SUBSCRIPTION_ID"
+    - export ARM_SUBSCRIPTION_ID="$AZUREAD_SUBSCRIPTION_ID"
     - cd "$TF_ROOT"
     - terraform init -input=false
 
