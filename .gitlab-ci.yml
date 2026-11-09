@@ -23,7 +23,7 @@ default:
 .azure:
   id_tokens:
     AZUREAD_ID_TOKEN:
-      aud: https://gitlab.com   # must equal the federated credential's audience
+      aud: https://gitlab.com/cypher04-group/azure-monitoring   # must equal the federated credential's audience
   before_script:
     - export ARM_USE_OIDC=true
     - export ARM_OIDC_TOKEN="$AZUREAD_ID_TOKEN"
