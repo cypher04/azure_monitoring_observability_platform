@@ -8,7 +8,7 @@ data "gitlab_project" "project" {
 
 resource "gitlab_project_environment" "default_branch" {
   project             = data.gitlab_project.project.id
-  name                = "${var.gitlab_default_branch}-${random_string.random_suffix.result}"
+  name                = var.gitlab_default_branch
   external_url        = "${var.gitlab_base_url}/${var.gitlab_namespace}/${var.gitlab_project_name}/-/environments/${var.gitlab_default_branch}"
   stop_before_destroy = true
   auto_stop_setting   = "always"
