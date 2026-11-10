@@ -11,10 +11,10 @@ address_space = [
 ]
 
 subnet_prefixes = {
-  "hub-subnet"   = "10.0.0.0/24"
-  "spoke-subnet" = "10.1.0.0/24"
-  "aks-subnet"      = "10.1.1.0/24"
-  "app-gtw-subnet"      = "10.1.2.0/24"
-  "AzureBastionSubnet"      = "10.0.1.0/24"
-  "subnet6"      = "10.1.4.0/24"
+  "hub-subnet"         = "10.0.0.0/24"
+  "spoke-subnet"       = "10.1.0.0/24"
+  "aks-subnet"         = "10.1.1.0/24"
+  "app-gtw-subnet"     = "10.1.2.0/24"
+  "AzureBastionSubnet" = "10.0.1.0/24"
+  "subnet6"            = "10.1.4.0/24"
 }
