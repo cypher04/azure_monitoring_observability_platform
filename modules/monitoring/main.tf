@@ -24,3 +24,6 @@ resource "azurerm_monitor_workspace" "mon-workspace" {
   resource_group_name = azurerm_resource_group.log-rg.name
 }
 
+resource "azurerm_resource_provider_registration" "monitor" {
+  name = "Microsoft.Monitor"
+}

@@ -23,7 +23,7 @@ resource "azurerm_key_vault" "security-kv" {
 
 
 resource "random_password" "security-kv-password" {
-  length  = 16
+  length  = 6
   special = false
   upper   = false
 }
