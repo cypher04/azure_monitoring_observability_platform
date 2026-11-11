@@ -101,13 +101,25 @@ resource "azurerm_network_security_group" "hub-nsg" {
   }
 
   security_rule {
-    name                       = "allow-ssh-rdp"
+    name                       = "allow-ssh"
     priority                   = 1002
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "22,3389"
+    destination_port_range     = "22"
+    source_address_prefix      = var.subnet_prefixes["AzureBastionSubnet"]
+    destination_address_prefix = var.subnet_prefixes["hub-subnet"]
+  }
+
+  security_rule {
+    name                       = "allow-rdp"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
     source_address_prefix      = var.subnet_prefixes["AzureBastionSubnet"]
     destination_address_prefix = var.subnet_prefixes["hub-subnet"]
   }
@@ -236,6 +248,8 @@ resource "azurerm_public_ip" "hub-nat-gateway-pip" {
   location            = var.location
   resource_group_name = azurerm_resource_group.networking.name
   allocation_method   = "Static"
+  sku                 = "Standard"
+  zones               = ["1"]
 }
 
 resource "azurerm_nat_gateway_public_ip_association" "hub-nat-gateway-pip-association" {
