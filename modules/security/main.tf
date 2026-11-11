@@ -23,13 +23,13 @@ resource "azurerm_key_vault" "security-kv" {
 
 
 resource "random_password" "security-kv-password" {
-  length  = 16
-  special = true
+  length  = 4
+  special = false
   upper   = false
 }
 
 resource "azurerm_key_vault_secret" "security-kv-secret" {
-  name         = "security-kv-secret"
+  name         = "security-kv-${random_password.security-kv-password.result}"
   value        = random_password.security-kv-password.result
   key_vault_id = azurerm_key_vault.security-kv.id
   depends_on   = [azurerm_role_assignment.security-kv-reader]
