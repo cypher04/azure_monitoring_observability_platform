@@ -22,5 +22,9 @@ resource "azurerm_monitor_workspace" "mon-workspace" {
   name                = "mon-workspace"
   location            = azurerm_resource_group.log-rg.location
   resource_group_name = azurerm_resource_group.log-rg.name
+  depends_on          = [azurerm_resource_provider_registration.monitor]
 }
 
+resource "azurerm_resource_provider_registration" "monitor" {
+  name = "Microsoft.Monitor"
+}

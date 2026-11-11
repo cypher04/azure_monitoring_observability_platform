@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "security-rg" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "security-kv" {
-  name                          = "security-kv-${random_password.security-kv-password.result}"
+  name                          = "security-kv-${random_string.security-kv-name.result}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.security-rg.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
@@ -22,12 +22,17 @@ resource "azurerm_key_vault" "security-kv" {
 }
 
 
-resource "random_password" "security-kv-password" {
-  length  = 16
+resource "random_string" "security-kv-name" {
+  length  = 6
   special = false
   upper   = false
 }
 
+resource "random_password" "security-kv-password" {
+  length  = 16
+  special = true
+  upper   = false
+}
 resource "azurerm_key_vault_secret" "security-kv-secret" {
   name         = "security-kv-secret"
   value        = random_password.security-kv-password.result
