@@ -125,6 +125,18 @@ resource "azurerm_network_security_group" "hub-nsg" {
   }
 
   security_rule {
+    name                       = "allow-http-inbound"
+    priority                   = 1004
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "AzureLoadBalancer"
+    destination_address_prefix = var.subnet_prefixes["spoke-subnet"]
+  }
+
+  security_rule {
     name                       = "allow-traffic-to-spoke"
     priority                   = 1003
     direction                  = "Outbound"
@@ -347,4 +359,50 @@ resource "azurerm_public_ip" "bastion-public-ip" {
   resource_group_name = azurerm_resource_group.networking.name
   allocation_method   = "Static"
   sku                 = "Standard"
+}
+
+#######################################################
+## load balancer
+#######################################################
+resource "azurerm_lb" "load-balancer" {
+  name                = "load-balancer"
+  location            = azurerm_resource_group.networking.location
+  resource_group_name = azurerm_resource_group.networking.name
+  sku                 = "Standard"
+
+  frontend_ip_configuration {
+    name                 = "load-balancer-frontend-ip"
+    public_ip_address_id = azurerm_public_ip.load-balancer-public-ip.id
+  }
+}
+
+resource "azurerm_public_ip" "load-balancer-public-ip" {
+  name                = "load-balancer-public-ip"
+  location            = azurerm_resource_group.networking.location
+  resource_group_name = azurerm_resource_group.networking.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+resource "azurerm_lb_backend_address_pool" "load-balancer-backend-pool" {
+  name            = "load-balancer-backend-pool"
+  loadbalancer_id = azurerm_lb.load-balancer.id
+}
+
+resource "azurerm_lb_probe" "load-balancer-probe" {
+  name            = "load-balancer-probe"
+  loadbalancer_id = azurerm_lb.load-balancer.id
+  protocol        = "Tcp"
+  port            = 80
+}
+
+resource "azurerm_lb_rule" "lb_rule" {
+  name                           = "lb-rule"
+  loadbalancer_id                = azurerm_lb.load-balancer.id
+  frontend_ip_configuration_name = "load-balancer-frontend-ip"
+  probe_id                       = azurerm_lb_probe.load-balancer-probe.id
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.load-balancer-backend-pool.id]
 }
