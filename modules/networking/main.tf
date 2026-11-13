@@ -409,6 +409,6 @@ resource "azurerm_lb_rule" "lb_rule" {
 
 // read network watcher
 data "azurerm_network_watcher" "network-watcher" {
-  name                = "network-watcher"
-  resource_group_name = azurerm_resource_group.networking.name
+  name                = var.network-watcher-name
+  resource_group_name = var.network-watcher-rg
 }
