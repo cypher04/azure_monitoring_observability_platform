@@ -406,3 +406,9 @@ resource "azurerm_lb_rule" "lb_rule" {
   backend_port                   = 80
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.load-balancer-backend-pool.id]
 }
+
+// read network watcher
+data "azurerm_network_watcher" "network-watcher" {
+  name                = var.network-watcher-name
+  resource_group_name = var.network-watcher-rg
+}

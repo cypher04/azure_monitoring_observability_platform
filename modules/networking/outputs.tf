@@ -14,3 +14,7 @@ output "subnet_ids" {
     azurerm_subnet.app-gtw-subnet.id
   ]
 }
+
+output "network_watcher_id" {
+  value = data.azurerm_network_watcher.network-watcher.id
+}

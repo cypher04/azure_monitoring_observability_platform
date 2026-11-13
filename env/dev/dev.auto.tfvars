@@ -1,5 +1,7 @@
 
-location = "centralus"
+location             = "centralus"
+network-watcher-name = "NetworkWatcher_centralus"
+network-watcher-rg   = "NetworkWatcherRG"
 
 address_space = [
   "10.0.0.0/16",
