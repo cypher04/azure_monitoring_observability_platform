@@ -407,8 +407,41 @@ resource "azurerm_lb_rule" "lb_rule" {
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.load-balancer-backend-pool.id]
 }
 
-// read network watcher
+#######################################################
+## Network Watcher
+#######################################################
 data "azurerm_network_watcher" "network-watcher" {
   name                = var.network-watcher-name
   resource_group_name = var.network-watcher-rg
+}
+
+// vnet flow log for hub subnet
+resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log" {
+  network_watcher_name = data.azurerm_network_watcher.network-watcher.name
+  enabled              = true
+  name               = "network-watcher-flow-log"
+  resource_group_name = var.network-watcher-rg
+  target_resource_id = azurerm_virtual_network.hub-vnet.id
+  storage_account_id  = var.log_storage_account_id
+
+retention_policy {
+  enabled = true
+  days = 7
+}
+
+}
+
+// vnet flow log for spoke subnet
+resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log-spoke" {
+  network_watcher_name = data.azurerm_network_watcher.network-watcher.name
+  enabled              = true
+  name                 = "network-watcher-flow-log-spoke"
+  resource_group_name  = var.network-watcher-rg
+  target_resource_id   = azurerm_virtual_network.spoke-vnet.id
+  storage_account_id   = var.log_storage_account_id
+
+  retention_policy {
+    enabled = true
+    days    = 7
+  }
 }

@@ -22,3 +22,8 @@ variable "network-watcher-rg" {
   description = "The resource group of the network watcher"
   type        = string
 }
+
+variable "log_storage_account_id" {
+  description = "The ID of the log storage account"
+  type        = string
+}
