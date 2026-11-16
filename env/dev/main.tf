@@ -6,11 +6,11 @@ data "azurerm_client_config" "current" {
 module "network" {
   source = "../../modules/networking"
 
-  location             = var.location
-  address_space        = var.address_space
-  subnet_prefixes      = var.subnet_prefixes
-  network-watcher-name = var.network-watcher-name
-  network-watcher-rg   = var.network-watcher-rg
+  location               = var.location
+  address_space          = var.address_space
+  subnet_prefixes        = var.subnet_prefixes
+  network-watcher-name   = var.network-watcher-name
+  network-watcher-rg     = var.network-watcher-rg
   log_storage_account_id = module.database.log_storage_account_id
 }
 
