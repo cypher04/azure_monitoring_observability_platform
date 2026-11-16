@@ -11,6 +11,7 @@ module "network" {
   subnet_prefixes      = var.subnet_prefixes
   network-watcher-name = var.network-watcher-name
   network-watcher-rg   = var.network-watcher-rg
+  log_storage_account_id = module.database.log_storage_account_id
 }
 
 
