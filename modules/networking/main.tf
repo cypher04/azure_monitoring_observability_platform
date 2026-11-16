@@ -425,8 +425,8 @@ resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log" {
   storage_account_id  = var.log_storage_account_id
 
 retention_policy {
-  enabled = true
-  days = 7
+  enabled = false
+  days    = 0
 }
 
 }
@@ -441,7 +441,7 @@ resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log-spoke" {
   storage_account_id   = var.log_storage_account_id
 
   retention_policy {
-    enabled = true
-    days    = 7
+    enabled = false
+    days    = 0
   }
 }
