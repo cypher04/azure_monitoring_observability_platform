@@ -33,6 +33,12 @@ resource "random_password" "security-kv-password" {
   special = true
   upper   = false
 }
+
+resource "random_string" "sql-admin-username" {
+  length  = 8
+  special = false
+  upper   = false
+}
 resource "azurerm_key_vault_secret" "security-kv-secret" {
   name         = "security-kv-secret"
   value        = random_password.security-kv-password.result
@@ -40,10 +46,25 @@ resource "azurerm_key_vault_secret" "security-kv-secret" {
   depends_on   = [azurerm_role_assignment.security-kv-reader]
 }
 
+resource "azurerm_key_vault_secret" "sql_admin_username" {
+  name         = "sql-admin-username"
+  value        = random_string.sql-admin-username.result
+  key_vault_id = azurerm_key_vault.security-kv.id
+  depends_on   = [azurerm_role_assignment.security-kv-reader]
+}
+
+resource "azurerm_key_vault_secret" "sql_admin_password" {
+  name         = "sql-admin-password"
+  value        = random_password.security-kv-password.result
+  key_vault_id = azurerm_key_vault.security-kv.id
+  depends_on   = [azurerm_role_assignment.security-kv-reader]
+}
+
+
+
 resource "azurerm_role_assignment" "security-kv-reader" {
   scope                = azurerm_key_vault.security-kv.id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = data.azurerm_client_config.current.object_id
   depends_on           = [azurerm_key_vault.security-kv]
 }
-

@@ -49,3 +49,27 @@ resource "random_string" "storage_suffix" {
   special = false
   upper   = false
 }
+
+#######################################################
+## azure sql database
+#######################################################
+
+resource "azurerm_mssql_server" "sql-server" {
+  name                         = "sql-server-${random_string.storage_suffix.result}"
+  resource_group_name          = azurerm_resource_group.db-rg.name
+  location                     = azurerm_resource_group.db-rg.location
+  version                      = "12.0"
+  administrator_login          = var.sql_admin_username
+  administrator_login_password = var.sql_admin_password
+}
+
+
+resource "azurerm_mssql_database" "sql-database" {
+  name         = "sql-database-${random_string.storage_suffix.result}"
+  sku_name     = "S0"
+  server_id    = azurerm_mssql_server.sql-server.id
+  collation    = "SQL_Latin1_General_CP1_CI_AS"
+  license_type = "LicenseIncluded"
+  max_size_gb  = 2
+  enclave_type = "VBS"
+}

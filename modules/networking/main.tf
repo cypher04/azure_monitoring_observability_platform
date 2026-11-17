@@ -336,6 +336,26 @@ resource "azurerm_private_dns_zone_virtual_network_link" "spoke-storage-account-
   virtual_network_id  = azurerm_virtual_network.spoke-vnet.id
 }
 
+#######################################################
+## PRIVATE DNS FOR SQL SERVER
+#######################################################
+resource "azurerm_private_dns_zone" "sql-server-private-dns-zone" {
+  name                = "privatelink.database.windows.net"
+  resource_group_name = azurerm_resource_group.networking.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "hub-sql-server-private-dns-zone-vnet-link" {
+  name                = "hub-sql-server-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.sql-server-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.hub-vnet.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "spoke-sql-server-private-dns-zone-vnet-link" {
+  name                = "spoke-sql-server-private-dns-zone-vnet-link"
+  private_dns_zone_id = azurerm_private_dns_zone.sql-server-private-dns-zone.id
+  virtual_network_id  = azurerm_virtual_network.spoke-vnet.id
+}
+
 
 #######################################################
 ## Azure Bastion
