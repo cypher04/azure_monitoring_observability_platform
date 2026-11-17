@@ -39,6 +39,15 @@ resource "random_string" "sql-admin-username" {
   special = false
   upper   = false
 }
+
+resource "random_password" "sql-admin-password" {
+  length      = 16
+  special     = true
+  upper       = false
+  min_lower   = 1
+  min_upper   = 1
+  min_special = 1
+}
 resource "azurerm_key_vault_secret" "security-kv-secret" {
   name         = "security-kv-secret"
   value        = random_password.security-kv-password.result
@@ -48,14 +57,14 @@ resource "azurerm_key_vault_secret" "security-kv-secret" {
 
 resource "azurerm_key_vault_secret" "sql_admin_username" {
   name         = "sql-admin-username"
-  value        = random_string.sql-admin-username.result
+  value        = "sql${random_string.sql-admin-username.result}"
   key_vault_id = azurerm_key_vault.security-kv.id
   depends_on   = [azurerm_role_assignment.security-kv-reader]
 }
 
 resource "azurerm_key_vault_secret" "sql_admin_password" {
   name         = "sql-admin-password"
-  value        = random_password.security-kv-password.result
+  value        = random_password.sql-admin-password.result
   key_vault_id = azurerm_key_vault.security-kv.id
   depends_on   = [azurerm_role_assignment.security-kv-reader]
 }
