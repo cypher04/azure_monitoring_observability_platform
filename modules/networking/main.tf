@@ -429,6 +429,15 @@ retention_policy {
   days    = 0
 }
 
+
+  traffic_analytics {
+    enabled               = true
+    workspace_id          = var.log_analytics_workspace_guid
+    interval_in_minutes   = 10
+    workspace_region      = var.location
+    workspace_resource_id = var.log_analytics_workspace_id
+  }
+
 }
 
 // vnet flow log for spoke subnet
@@ -443,5 +452,14 @@ resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log-spoke" {
   retention_policy {
     enabled = false
     days    = 0
+  }
+
+
+  traffic_analytics {
+    enabled               = true
+    workspace_id          = var.log_analytics_workspace_guid
+    interval_in_minutes   = 10
+    workspace_region      = var.location
+    workspace_resource_id = var.log_analytics_workspace_id
   }
 }
