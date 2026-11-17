@@ -419,15 +419,15 @@ data "azurerm_network_watcher" "network-watcher" {
 resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log" {
   network_watcher_name = data.azurerm_network_watcher.network-watcher.name
   enabled              = true
-  name               = "network-watcher-flow-log"
-  resource_group_name = var.network-watcher-rg
-  target_resource_id = azurerm_virtual_network.hub-vnet.id
-  storage_account_id  = var.log_storage_account_id
+  name                 = "network-watcher-flow-log"
+  resource_group_name  = var.network-watcher-rg
+  target_resource_id   = azurerm_virtual_network.hub-vnet.id
+  storage_account_id   = var.log_storage_account_id
 
-retention_policy {
-  enabled = false
-  days    = 0
-}
+  retention_policy {
+    enabled = false
+    days    = 0
+  }
 
 
   traffic_analytics {
