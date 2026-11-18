@@ -20,7 +20,9 @@ module "network" {
 module "database" {
   source = "../../modules/database"
 
-  location = var.location
+  location           = var.location
+  sql_admin_username = module.security.sql_admin_username
+  sql_admin_password = module.security.sql_admin_password
 }
 
 module "monitoring" {
