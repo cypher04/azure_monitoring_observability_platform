@@ -69,7 +69,27 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
   depends_on   = [azurerm_role_assignment.security-kv-reader]
 }
 
+#######################################################
+## SECRETS FOR VM
+#######################################################
 
+resource "azurerm_key_vault_secret" "vm-secret" {
+  name         = "vm-username-secret"
+  value        = random_string.sql-admin-username.result
+  key_vault_id = azurerm_key_vault.security-kv.id
+  depends_on   = [azurerm_role_assignment.security-kv-reader]
+}
+
+resource "azurerm_key_vault_secret" "vm-password-secret" {
+  name         = "vm-password-secret"
+  value        = random_password.security-kv-password.result
+  key_vault_id = azurerm_key_vault.security-kv.id
+  depends_on   = [azurerm_role_assignment.security-kv-reader]
+}
+
+#######################################################
+## ROLE ASSIGNMENTS FOR KEY VAULT
+#######################################################
 
 resource "azurerm_role_assignment" "security-kv-reader" {
   scope                = azurerm_key_vault.security-kv.id
