@@ -14,7 +14,7 @@ resource "azurerm_network_interface" "windows-nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.compute-subnet.id
+    subnet_id                     = var.subnet_ids["spoke-subnet"]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -50,5 +50,5 @@ resource "azurerm_windows_virtual_machine" "windows-vm" {
 resource "azurerm_network_interface_backend_address_pool_association" "nic-backend-association" {
   network_interface_id    = azurerm_network_interface.windows-nic.id
   ip_configuration_name   = "internal"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.load-balancer-backend-pool.id
+  backend_address_pool_id = var.lb_backend_address_pool_id
 }

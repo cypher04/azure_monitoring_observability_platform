@@ -6,9 +6,11 @@ data "azurerm_client_config" "current" {
 module "compute" {
   source = "../../modules/compute"
 
-  location = var.location
-  vm_username = module.security.vm_username
-  vm_password = module.security.vm_password
+  location                   = var.location
+  vm_username                = module.security.vm_username
+  vm_password                = module.security.vm_password
+  lb_backend_address_pool_id = module.network.lb_backend_address_pool_id
+  subnet_ids                 = module.network.subnet_ids
 }
 
 module "network" {
