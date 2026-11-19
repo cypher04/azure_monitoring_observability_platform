@@ -14,3 +14,11 @@ output "sql_admin_username" {
 output "sql_admin_password" {
   value = azurerm_key_vault_secret.sql_admin_password.value
 }
+
+output "vm_username" {
+  value = azurerm_key_vault_secret.vm-secret.value
+}
+
+output "vm_password" {
+  value = azurerm_key_vault_secret.vm-password-secret.value
+}
