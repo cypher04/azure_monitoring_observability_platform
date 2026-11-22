@@ -41,6 +41,10 @@ resource "azurerm_windows_virtual_machine" "windows-vm" {
     sku       = "2016-Datacenter"
     version   = "latest"
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 #######################################################
