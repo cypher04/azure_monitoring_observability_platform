@@ -67,11 +67,11 @@ resource "azurerm_virtual_machine_extension" "windows-vm-extension" {
   name                 = "windows-vm-extension"
   virtual_machine_id   = azurerm_windows_virtual_machine.windows-vm.id
   publisher            = "Microsoft.Compute"
-  type                 = "CustomScript"
+  type                 = "CustomScriptExtension"
   type_handler_version = "1.10"
 
   settings = <<SETTINGS
-    {
+    { 
       "commandToExecute": "powershell -Command Install-WindowsFeature -Name Web-Server"
     }
   SETTINGS
