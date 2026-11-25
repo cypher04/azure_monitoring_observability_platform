@@ -12,3 +12,8 @@ variable "sql_admin_password" {
   description = "The administrator password for the SQL server"
   type        = string
 }
+
+variable "sql_server_location" {
+  description = "The location for the SQL server"
+  type        = string
+}
