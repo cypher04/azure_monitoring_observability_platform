@@ -1,5 +1,5 @@
 
-location             = "centralus"
+location             = "eastus2"
 network-watcher-name = "NetworkWatcher_centralus"
 network-watcher-rg   = "NetworkWatcherRG"
 

@@ -23,7 +23,7 @@ resource "azurerm_windows_virtual_machine" "windows-vm" {
   name                = "windows-vm"
   resource_group_name = azurerm_resource_group.compute-rg.name
   location            = var.location
-  size                = "Standard_D4_v5"
+  size                = "Standard_B2s"
   admin_username      = var.vm_username
   admin_password      = var.vm_password
   network_interface_ids = [
@@ -42,7 +42,7 @@ resource "azurerm_windows_virtual_machine" "windows-vm" {
   }
 
   boot_diagnostics {
-    
+
   }
 
   identity {
