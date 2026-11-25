@@ -22,3 +22,8 @@ variable "network-watcher-rg" {
   description = "The resource group of the network watcher"
   type        = string
 }
+
+variable "sql_server_location" {
+  description = "The location of the SQL server"
+  type        = string
+}

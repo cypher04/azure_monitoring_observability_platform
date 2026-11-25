@@ -2,6 +2,7 @@
 location             = "eastus2"
 network-watcher-name = "NetworkWatcher_eastus2"
 network-watcher-rg   = "NetworkWatcherRG"
+sql_server_location  = "centralus"
 
 address_space = [
   "10.0.0.0/16",

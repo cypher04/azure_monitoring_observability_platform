@@ -57,7 +57,7 @@ resource "random_string" "storage_suffix" {
 resource "azurerm_mssql_server" "sql-server" {
   name                         = "sql-server-${random_string.storage_suffix.result}"
   resource_group_name          = azurerm_resource_group.db-rg.name
-  location                     = azurerm_resource_group.db-rg.location
+  location                     = var.sql_server_location
   version                      = "12.0"
   administrator_login          = var.sql_admin_username
   administrator_login_password = var.sql_admin_password
