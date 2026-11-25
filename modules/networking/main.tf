@@ -138,7 +138,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
   security_rule {
     name                       = "allow-traffic-to-spoke"
-    priority                   = 1003
+    priority                   = 1005
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "*"
@@ -150,7 +150,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
   security_rule {
     name                       = "deny-internal-traffic"
-    priority                   = 1004
+    priority                   = 1006
     direction                  = "Inbound"
     access                     = "Deny"
     protocol                   = "*"
@@ -162,7 +162,7 @@ resource "azurerm_network_security_group" "hub-nsg" {
 
   security_rule {
     name                       = "deny-internal-traffic-outbound"
-    priority                   = 1005
+    priority                   = 1007
     direction                  = "Outbound"
     access                     = "Deny"
     protocol                   = "*"
@@ -433,6 +433,7 @@ resource "azurerm_lb_rule" "lb_rule" {
 data "azurerm_network_watcher" "network-watcher" {
   name                = var.network-watcher-name
   resource_group_name = var.network-watcher-rg
+  depends_on = [azurerm_virtual_network.hub-vnet, azurerm_virtual_network.spoke-vnet]
 }
 
 // vnet flow log for hub subnet
@@ -458,6 +459,8 @@ resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log" {
     workspace_resource_id = var.log_analytics_workspace_id
   }
 
+  depends_on = [data.azurerm_network_watcher.network-watcher]
+
 }
 
 // vnet flow log for spoke subnet
@@ -482,4 +485,5 @@ resource "azurerm_network_watcher_flow_log" "network-watcher-flow-log-spoke" {
     workspace_region      = var.location
     workspace_resource_id = var.log_analytics_workspace_id
   }
+  depends_on = [data.azurerm_network_watcher.network-watcher]
 }

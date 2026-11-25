@@ -1,6 +1,6 @@
 
-location             = "centralus"
-network-watcher-name = "NetworkWatcher_centralus"
+location             = "eastus2"
+network-watcher-name = "NetworkWatcher_eastus2"
 network-watcher-rg   = "NetworkWatcherRG"
 
 address_space = [
