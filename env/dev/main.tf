@@ -33,6 +33,7 @@ module "database" {
   location           = var.location
   sql_admin_username = module.security.sql_admin_username
   sql_admin_password = module.security.sql_admin_password
+  sql_server_location = var.sql_server_location
 }
 
 module "monitoring" {
